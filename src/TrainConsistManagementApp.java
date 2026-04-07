@@ -4,16 +4,16 @@ import java.util.stream.Collectors;
 public class TrainConsistManagementApp {
 
     static class Bogie {
-        String name;
+        String type;
         int capacity;
 
-        Bogie(String name, int capacity) {
-            this.name = name;
+        Bogie(String type, int capacity) {
+            this.type = type;
             this.capacity = capacity;
         }
 
-        String getName() {
-            return name;
+        String getType() {
+            return type;
         }
 
         int getCapacity() {
@@ -40,7 +40,7 @@ public class TrainConsistManagementApp {
     }
 
     public static Map<String, List<Bogie>> groupBogiesByType(List<Bogie> bogies) {
-        return bogies.stream().collect(Collectors.groupingBy(Bogie::getName));
+        return bogies.stream().collect(Collectors.groupingBy(Bogie::getType));
     }
 
     public static int countTotalSeats(List<Bogie> bogies) {
@@ -56,26 +56,47 @@ public class TrainConsistManagementApp {
         });
     }
 
+    public static List<Bogie> filterBogiesLoop(List<Bogie> bogies, int threshold) {
+        List<Bogie> result = new ArrayList<>();
+        for (Bogie b : bogies) {
+            if (b.getCapacity() > threshold) {
+                result.add(b);
+            }
+        }
+        return result;
+    }
+
+    public static List<Bogie> filterBogiesStream(List<Bogie> bogies, int threshold) {
+        return bogies.stream().filter(b -> b.getCapacity() > threshold).collect(Collectors.toList());
+    }
+
+    public static long measureLoopTime(List<Bogie> bogies, int threshold) {
+        long start = System.nanoTime();
+        filterBogiesLoop(bogies, threshold);
+        long end = System.nanoTime();
+        return end - start;
+    }
+
+    public static long measureStreamTime(List<Bogie> bogies, int threshold) {
+        long start = System.nanoTime();
+        filterBogiesStream(bogies, threshold);
+        long end = System.nanoTime();
+        return end - start;
+    }
+
     public static void main(String[] args) {
-        List<GoodsBogie> goodsBogies = new ArrayList<>();
-        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
-        goodsBogies.add(new GoodsBogie("Open", "Coal"));
-        goodsBogies.add(new GoodsBogie("Box", "Grain"));
-        goodsBogies.add(new GoodsBogie("Cylindrical", "Coal"));
-
-        System.out.println("UC12 - Safety Compliance Check for Goods Bogies");
-        System.out.println("Goods Bogies in Train:");
-        for (GoodsBogie g : goodsBogies) {
-            System.out.println(g.getType() + " -> " + g.getCargo());
+        List<Bogie> bogies = new ArrayList<>();
+        for (int i = 0; i < 10000; i++) {
+            bogies.add(new Bogie("Sleeper", 50 + (i % 30)));
         }
 
-        boolean safe = checkSafetyCompliance(goodsBogies);
-        System.out.println("\nSafety Compliance Status: " + safe);
-        if (safe) {
-            System.out.println("Train formation is SAFE.");
-        } else {
-            System.out.println("Train formation is NOT SAFE.");
-        }
-        System.out.println("\nUC12 safety validation completed ...");
+        System.out.println("UC13 - Performance Comparison (Loops vs Streams)");
+
+        long loopTime = measureLoopTime(bogies, 60);
+        long streamTime = measureStreamTime(bogies, 60);
+
+        System.out.println("Loop Execution Time (ns): " + loopTime);
+        System.out.println("Stream Execution Time (ns): " + streamTime);
+        System.out.println("\nUC13 performance benchmarking completed ...");
     }
 }
