@@ -1,33 +1,48 @@
+import java.util.Arrays;
+
 public class TrainConsistManagementApp {
 
-    public static boolean linearSearch(String[] bogieIds, String searchId) {
-        for (String id : bogieIds) {
-            if (id.equals(searchId)) {
+    public static boolean binarySearch(String[] bogieIds, String key) {
+        Arrays.sort(bogieIds); // ensure sorted before searching
+        int low = 0;
+        int high = bogieIds.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int cmp = key.compareTo(bogieIds[mid]);
+
+            if (cmp == 0) {
                 return true;
+            } else if (cmp < 0) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
             }
         }
         return false;
     }
 
     public static void main(String[] args) {
-        System.out.println("UC18 - Linear Search for Bogie ID");
+        System.out.println("UC19 - Binary Search for Bogie ID");
 
         String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        String searchId = "BG309";
+        String key = "BG309";
 
-        System.out.println("Available Bogie IDs:");
+        Arrays.sort(bogieIds);
+
+        System.out.println("Sorted Bogie IDs:");
         for (String id : bogieIds) {
             System.out.println(id);
         }
 
-        boolean found = linearSearch(bogieIds, searchId);
+        boolean found = binarySearch(bogieIds, key);
 
         if (found) {
-            System.out.println("\nBogie " + searchId + " found in train consist.");
+            System.out.println("\nBogie " + key + " found using Binary Search.");
         } else {
-            System.out.println("\nBogie " + searchId + " not found in train consist.");
+            System.out.println("\nBogie " + key + " not found using Binary Search.");
         }
 
-        System.out.println("\nUC18 search completed ...");
+        System.out.println("\nUC19 search completed ...");
     }
 }
