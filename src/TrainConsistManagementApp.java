@@ -21,6 +21,24 @@ public class TrainConsistManagementApp {
         }
     }
 
+    static class GoodsBogie {
+        String type;
+        String cargo;
+
+        GoodsBogie(String type, String cargo) {
+            this.type = type;
+            this.cargo = cargo;
+        }
+
+        String getType() {
+            return type;
+        }
+
+        String getCargo() {
+            return cargo;
+        }
+    }
+
     public static Map<String, List<Bogie>> groupBogiesByType(List<Bogie> bogies) {
         return bogies.stream().collect(Collectors.groupingBy(Bogie::getName));
     }
@@ -29,21 +47,35 @@ public class TrainConsistManagementApp {
         return bogies.stream().map(Bogie::getCapacity).reduce(0, Integer::sum);
     }
 
-    public static void main(String[] args) {
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("Sleeper", 70));
+    public static boolean checkSafetyCompliance(List<GoodsBogie> goodsBogies) {
+        return goodsBogies.stream().allMatch(b -> {
+            if (b.getType().equalsIgnoreCase("Cylindrical")) {
+                return b.getCargo().equalsIgnoreCase("Petroleum");
+            }
+            return true;
+        });
+    }
 
-        System.out.println("UC10 - Count Total Seats in Train");
-        System.out.println("Bogies in Train:");
-        for (Bogie b : bogies) {
-            System.out.println(b.getName() + " -> " + b.getCapacity());
+    public static void main(String[] args) {
+        List<GoodsBogie> goodsBogies = new ArrayList<>();
+        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        goodsBogies.add(new GoodsBogie("Open", "Coal"));
+        goodsBogies.add(new GoodsBogie("Box", "Grain"));
+        goodsBogies.add(new GoodsBogie("Cylindrical", "Coal"));
+
+        System.out.println("UC12 - Safety Compliance Check for Goods Bogies");
+        System.out.println("Goods Bogies in Train:");
+        for (GoodsBogie g : goodsBogies) {
+            System.out.println(g.getType() + " -> " + g.getCargo());
         }
 
-        int totalSeats = countTotalSeats(bogies);
-        System.out.println("\nTotal Seating Capacity of Train: " + totalSeats);
-        System.out.println("\nUC10 aggregation completed ...");
+        boolean safe = checkSafetyCompliance(goodsBogies);
+        System.out.println("\nSafety Compliance Status: " + safe);
+        if (safe) {
+            System.out.println("Train formation is SAFE.");
+        } else {
+            System.out.println("Train formation is NOT SAFE.");
+        }
+        System.out.println("\nUC12 safety validation completed ...");
     }
 }

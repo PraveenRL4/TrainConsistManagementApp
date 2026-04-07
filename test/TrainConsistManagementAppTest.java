@@ -1,73 +1,48 @@
 import org.junit.jupiter.api.Test;
-import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
 
 public class TrainConsistManagementAppTest {
+
     @Test
-    void testReduce_TotalSeatCalculation() {
-        List<TrainConsistManagementApp.Bogie> bogies = Arrays.asList(
-                new TrainConsistManagementApp.Bogie("Sleeper", 72),
-                new TrainConsistManagementApp.Bogie("AC Chair", 56),
-                new TrainConsistManagementApp.Bogie("First Class", 24),
-                new TrainConsistManagementApp.Bogie("Sleeper", 70)
+    void testSafety_AllBogiesValid() {
+        List<TrainConsistManagementApp.GoodsBogie> goodsBogies = Arrays.asList(
+                new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Petroleum"),
+                new TrainConsistManagementApp.GoodsBogie("Open", "Coal"),
+                new TrainConsistManagementApp.GoodsBogie("Box", "Grain")
         );
-        int total = TrainConsistManagementApp.countTotalSeats(bogies);
-        assertEquals(222, total);
+        assertTrue(TrainConsistManagementApp.checkSafetyCompliance(goodsBogies));
     }
 
     @Test
-    void testReduce_MultipleBogiesAggregation() {
-        List<TrainConsistManagementApp.Bogie> bogies = Arrays.asList(
-                new TrainConsistManagementApp.Bogie("Sleeper", 72),
-                new TrainConsistManagementApp.Bogie("AC Chair", 56)
+    void testSafety_CylindricalWithInvalidCargo() {
+        List<TrainConsistManagementApp.GoodsBogie> goodsBogies = Arrays.asList(
+                new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Coal")
         );
-        int total = TrainConsistManagementApp.countTotalSeats(bogies);
-        assertEquals(128, total);
+        assertFalse(TrainConsistManagementApp.checkSafetyCompliance(goodsBogies));
     }
 
     @Test
-    void testReduce_SingleBogieCapacity() {
-        List<TrainConsistManagementApp.Bogie> bogies = Arrays.asList(
-                new TrainConsistManagementApp.Bogie("First Class", 24)
+    void testSafety_NonCylindricalBogiesAllowed() {
+        List<TrainConsistManagementApp.GoodsBogie> goodsBogies = Arrays.asList(
+                new TrainConsistManagementApp.GoodsBogie("Open", "Coal"),
+                new TrainConsistManagementApp.GoodsBogie("Box", "Grain")
         );
-        int total = TrainConsistManagementApp.countTotalSeats(bogies);
-        assertEquals(24, total);
+        assertTrue(TrainConsistManagementApp.checkSafetyCompliance(goodsBogies));
     }
 
     @Test
-    void testReduce_EmptyBogieList() {
-        List<TrainConsistManagementApp.Bogie> bogies = new ArrayList<>();
-        int total = TrainConsistManagementApp.countTotalSeats(bogies);
-        assertEquals(0, total);
-    }
-
-    @Test
-    void testReduce_CorrectCapacityExtraction() {
-        TrainConsistManagementApp.Bogie b = new TrainConsistManagementApp.Bogie("Sleeper", 72);
-        assertEquals(72, b.getCapacity());
-    }
-
-    @Test
-    void testReduce_AllBogiesIncluded() {
-        List<TrainConsistManagementApp.Bogie> bogies = Arrays.asList(
-                new TrainConsistManagementApp.Bogie("Sleeper", 72),
-                new TrainConsistManagementApp.Bogie("AC Chair", 56),
-                new TrainConsistManagementApp.Bogie("First Class", 24)
+    void testSafety_MixedBogiesWithViolation() {
+        List<TrainConsistManagementApp.GoodsBogie> goodsBogies = Arrays.asList(
+                new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Petroleum"),
+                new TrainConsistManagementApp.GoodsBogie("Cylindrical", "Coal")
         );
-        int total = TrainConsistManagementApp.countTotalSeats(bogies);
-        assertEquals(152, total);
+        assertFalse(TrainConsistManagementApp.checkSafetyCompliance(goodsBogies));
     }
 
     @Test
-    void testReduce_OriginalListUnchanged() {
-        List<TrainConsistManagementApp.Bogie> bogies = new ArrayList<>();
-        bogies.add(new TrainConsistManagementApp.Bogie("Sleeper", 72));
-        bogies.add(new TrainConsistManagementApp.Bogie("AC Chair", 56));
-
-        List<TrainConsistManagementApp.Bogie> originalCopy = new ArrayList<>(bogies);
-        TrainConsistManagementApp.countTotalSeats(bogies);
-
-        assertEquals(originalCopy.size(), bogies.size());
-        assertEquals(originalCopy.get(0).getName(), bogies.get(0).getName());
+    void testSafety_EmptyBogieList() {
+        List<TrainConsistManagementApp.GoodsBogie> goodsBogies = new ArrayList<>();
+        assertTrue(TrainConsistManagementApp.checkSafetyCompliance(goodsBogies));
     }
 }
