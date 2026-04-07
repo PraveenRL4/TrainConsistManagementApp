@@ -1,53 +1,36 @@
-import java.util.*;
+import java.util.regex.Pattern;
+import java.util.Scanner;
 
 public class TrainConsistManagementApp {
 
-    static class CargoSafetyException extends RuntimeException {
-        CargoSafetyException(String message) {
-            super(message);
-        }
+    public static boolean validateTrainId(String trainId) {
+        String regex = "TRN-\\d{4}";
+        return Pattern.matches(regex, trainId);
     }
 
-    static class GoodsBogie {
-        String shape;
-        String cargo;
-
-        GoodsBogie(String shape) {
-            this.shape = shape;
-        }
-
-        void assignCargo(String cargo) {
-            try {
-                if (shape.equalsIgnoreCase("Rectangular") && cargo.equalsIgnoreCase("Petroleum")) {
-                    throw new CargoSafetyException("Unsafe cargo assignment!");
-                }
-                this.cargo = cargo;
-                System.out.println("Cargo assigned successfully -> " + cargo);
-            } catch (CargoSafetyException e) {
-                System.out.println("Error: " + e.getMessage());
-            } finally {
-                System.out.println("Cargo validation completed for " + shape + " bogie");
-            }
-        }
-
-        String getShape() {
-            return shape;
-        }
-
-        String getCargo() {
-            return cargo;
-        }
+    public static boolean validateCargoCode(String cargoCode) {
+        String regex = "PET-[A-Z]{2}";
+        return Pattern.matches(regex, cargoCode);
     }
 
     public static void main(String[] args) {
-        System.out.println("UC15 - Safe Cargo Assignment");
+        Scanner scanner = new Scanner(System.in);
 
-        GoodsBogie cylindrical = new GoodsBogie("Cylindrical");
-        cylindrical.assignCargo("Petroleum");
+        System.out.println("UC11 - Validate Train ID and Cargo Code");
 
-        GoodsBogie rectangular = new GoodsBogie("Rectangular");
-        rectangular.assignCargo("Petroleum");
+        System.out.print("Enter Train ID (Format: TRN-1234): ");
+        String trainId = scanner.nextLine();
 
-        System.out.println("\nUC15 runtime handling completed ...");
+        System.out.print("Enter Cargo Code (Format: PET-AB): ");
+        String cargoCode = scanner.nextLine();
+
+        boolean trainIdValid = validateTrainId(trainId);
+        boolean cargoCodeValid = validateCargoCode(cargoCode);
+
+        System.out.println("\nValidation Results:");
+        System.out.println("Train ID Valid: " + trainIdValid);
+        System.out.println("Cargo Code Valid: " + cargoCodeValid);
+
+        System.out.println("\nUC11 validation completed ...");
     }
 }

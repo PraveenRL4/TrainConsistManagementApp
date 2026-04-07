@@ -4,40 +4,49 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TrainConsistManagementAppTest {
 
     @Test
-    void testCargo_SafeAssignment() {
-        TrainConsistManagementApp.GoodsBogie b = new TrainConsistManagementApp.GoodsBogie("Cylindrical");
-        b.assignCargo("Petroleum");
-        assertEquals("Petroleum", b.getCargo());
+    void testRegex_ValidTrainID() {
+        assertTrue(TrainConsistManagementApp.validateTrainId("TRN-1234"));
     }
 
     @Test
-    void testCargo_UnsafeAssignmentHandled() {
-        TrainConsistManagementApp.GoodsBogie b = new TrainConsistManagementApp.GoodsBogie("Rectangular");
-        b.assignCargo("Petroleum");
-        assertNull(b.getCargo());
+    void testRegex_InvalidTrainIDFormat() {
+        assertFalse(TrainConsistManagementApp.validateTrainId("TRAIN12"));
+        assertFalse(TrainConsistManagementApp.validateTrainId("TRN12A"));
+        assertFalse(TrainConsistManagementApp.validateTrainId("1234-TRN"));
     }
 
     @Test
-    void testCargo_CargoNotAssignedAfterFailure() {
-        TrainConsistManagementApp.GoodsBogie b = new TrainConsistManagementApp.GoodsBogie("Rectangular");
-        b.assignCargo("Petroleum");
-        assertNull(b.getCargo());
+    void testRegex_ValidCargoCode() {
+        assertTrue(TrainConsistManagementApp.validateCargoCode("PET-AB"));
     }
 
     @Test
-    void testCargo_ProgramContinuesAfterException() {
-        TrainConsistManagementApp.GoodsBogie b1 = new TrainConsistManagementApp.GoodsBogie("Cylindrical");
-        b1.assignCargo("Petroleum");
-        TrainConsistManagementApp.GoodsBogie b2 = new TrainConsistManagementApp.GoodsBogie("Rectangular");
-        b2.assignCargo("Petroleum");
-        assertEquals("Petroleum", b1.getCargo());
-        assertNull(b2.getCargo());
+    void testRegex_InvalidCargoCodeFormat() {
+        assertFalse(TrainConsistManagementApp.validateCargoCode("PET-ab"));
+        assertFalse(TrainConsistManagementApp.validateCargoCode("PET123"));
+        assertFalse(TrainConsistManagementApp.validateCargoCode("AB-PET"));
     }
 
     @Test
-    void testCargo_FinallyBlockExecution() {
-        TrainConsistManagementApp.GoodsBogie b = new TrainConsistManagementApp.GoodsBogie("Rectangular");
-        b.assignCargo("Petroleum");
-        assertNull(b.getCargo());
+    void testRegex_TrainIDDigitLengthValidation() {
+        assertFalse(TrainConsistManagementApp.validateTrainId("TRN-123"));
+        assertFalse(TrainConsistManagementApp.validateTrainId("TRN-12345"));
+    }
+
+    @Test
+    void testRegex_CargoCodeUppercaseValidation() {
+        assertFalse(TrainConsistManagementApp.validateCargoCode("PET-ab"));
+    }
+
+    @Test
+    void testRegex_EmptyInputHandling() {
+        assertFalse(TrainConsistManagementApp.validateTrainId(""));
+        assertFalse(TrainConsistManagementApp.validateCargoCode(""));
+    }
+
+    @Test
+    void testRegex_ExactPatternMatch() {
+        assertFalse(TrainConsistManagementApp.validateTrainId("TRN-1234X"));
+        assertFalse(TrainConsistManagementApp.validateCargoCode("PET-ABC"));
     }
 }
