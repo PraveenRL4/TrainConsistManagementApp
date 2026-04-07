@@ -1,44 +1,36 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class TrainConsistManagementApp {
 
-    static class InvalidCapacityException extends Exception {
-        public InvalidCapacityException(String message) {
-            super(message);
+    static class Bogie {
+        String name;
+        int capacity;
+
+        Bogie(String name, int capacity) {
+            this.name = name;
+            this.capacity = capacity;
         }
     }
 
-    static class PassengerBogie {
-        String type;
-        int capacity;
-
-        PassengerBogie(String type, int capacity) throws InvalidCapacityException {
-            if (capacity <= 0) {
-                throw new InvalidCapacityException("Capacity must be greater than zero");
-            }
-            this.type = type;
-            this.capacity = capacity;
-        }
-
-        @Override
-        public String toString() {
-            return type + " -> " + capacity;
-        }
+    public static List<Bogie> filterBogies(List<Bogie> bogies) {
+        return bogies.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
     }
 
     public static void main(String[] args) {
-        System.out.println("===========================================");
-        System.out.println(" UC14 - Handle Invalid Bogie Capacity ");
-        System.out.println("===========================================\n");
 
-        try {
-            PassengerBogie b1 = new PassengerBogie("Sleeper", 72);
-            System.out.println("Created Bogie: " + b1);
+        List<Bogie> bogies = new ArrayList<>();
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 24));
 
-            PassengerBogie b2 = new PassengerBogie("AC Chair", 0);
-            System.out.println("Created Bogie: " + b2);
-        } catch (InvalidCapacityException e) {
-            System.out.println("Error: " + e.getMessage());
+        List<Bogie> result = filterBogies(bogies);
+
+        for (Bogie b : result) {
+            System.out.println(b.name + " -> " + b.capacity);
         }
-
-        System.out.println("\nUC14 exception handling completed...");
     }
 }
