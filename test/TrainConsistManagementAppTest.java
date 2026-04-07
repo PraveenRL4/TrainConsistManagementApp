@@ -4,49 +4,37 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TrainConsistManagementAppTest {
 
     @Test
-    void testRegex_ValidTrainID() {
-        assertTrue(TrainConsistManagementApp.validateTrainId("TRN-1234"));
+    void testSort_BasicSorting() {
+        int[] capacities = {72, 56, 24, 70, 60};
+        TrainConsistManagementApp.bubbleSort(capacities);
+        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, capacities);
     }
 
     @Test
-    void testRegex_InvalidTrainIDFormat() {
-        assertFalse(TrainConsistManagementApp.validateTrainId("TRAIN12"));
-        assertFalse(TrainConsistManagementApp.validateTrainId("TRN12A"));
-        assertFalse(TrainConsistManagementApp.validateTrainId("1234-TRN"));
+    void testSort_AlreadySortedArray() {
+        int[] capacities = {24, 56, 60, 70, 72};
+        TrainConsistManagementApp.bubbleSort(capacities);
+        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, capacities);
     }
 
     @Test
-    void testRegex_ValidCargoCode() {
-        assertTrue(TrainConsistManagementApp.validateCargoCode("PET-AB"));
+    void testSort_DuplicateValues() {
+        int[] capacities = {72, 56, 56, 24};
+        TrainConsistManagementApp.bubbleSort(capacities);
+        assertArrayEquals(new int[]{24, 56, 56, 72}, capacities);
     }
 
     @Test
-    void testRegex_InvalidCargoCodeFormat() {
-        assertFalse(TrainConsistManagementApp.validateCargoCode("PET-ab"));
-        assertFalse(TrainConsistManagementApp.validateCargoCode("PET123"));
-        assertFalse(TrainConsistManagementApp.validateCargoCode("AB-PET"));
+    void testSort_SingleElementArray() {
+        int[] capacities = {50};
+        TrainConsistManagementApp.bubbleSort(capacities);
+        assertArrayEquals(new int[]{50}, capacities);
     }
 
     @Test
-    void testRegex_TrainIDDigitLengthValidation() {
-        assertFalse(TrainConsistManagementApp.validateTrainId("TRN-123"));
-        assertFalse(TrainConsistManagementApp.validateTrainId("TRN-12345"));
-    }
-
-    @Test
-    void testRegex_CargoCodeUppercaseValidation() {
-        assertFalse(TrainConsistManagementApp.validateCargoCode("PET-ab"));
-    }
-
-    @Test
-    void testRegex_EmptyInputHandling() {
-        assertFalse(TrainConsistManagementApp.validateTrainId(""));
-        assertFalse(TrainConsistManagementApp.validateCargoCode(""));
-    }
-
-    @Test
-    void testRegex_ExactPatternMatch() {
-        assertFalse(TrainConsistManagementApp.validateTrainId("TRN-1234X"));
-        assertFalse(TrainConsistManagementApp.validateCargoCode("PET-ABC"));
+    void testSort_AllEqualValues() {
+        int[] capacities = {40, 40, 40};
+        TrainConsistManagementApp.bubbleSort(capacities);
+        assertArrayEquals(new int[]{40, 40, 40}, capacities);
     }
 }

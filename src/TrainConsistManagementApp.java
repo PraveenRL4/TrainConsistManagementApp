@@ -1,36 +1,35 @@
-import java.util.regex.Pattern;
-import java.util.Scanner;
-
 public class TrainConsistManagementApp {
 
-    public static boolean validateTrainId(String trainId) {
-        String regex = "TRN-\\d{4}";
-        return Pattern.matches(regex, trainId);
-    }
-
-    public static boolean validateCargoCode(String cargoCode) {
-        String regex = "PET-[A-Z]{2}";
-        return Pattern.matches(regex, cargoCode);
+    public static void bubbleSort(int[] capacities) {
+        int n = capacities.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (capacities[j] > capacities[j + 1]) {
+                    int temp = capacities[j];
+                    capacities[j] = capacities[j + 1];
+                    capacities[j + 1] = temp;
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("UC16 - Manual Sorting using Bubble Sort");
 
-        System.out.println("UC11 - Validate Train ID and Cargo Code");
+        int[] capacities = {72, 56, 24, 70, 60};
 
-        System.out.print("Enter Train ID (Format: TRN-1234): ");
-        String trainId = scanner.nextLine();
+        System.out.println("Original Capacities:");
+        for (int c : capacities) {
+            System.out.print(c + " ");
+        }
 
-        System.out.print("Enter Cargo Code (Format: PET-AB): ");
-        String cargoCode = scanner.nextLine();
+        bubbleSort(capacities);
 
-        boolean trainIdValid = validateTrainId(trainId);
-        boolean cargoCodeValid = validateCargoCode(cargoCode);
+        System.out.println("\n\nSorted Capacities (Ascending):");
+        for (int c : capacities) {
+            System.out.print(c + " ");
+        }
 
-        System.out.println("\nValidation Results:");
-        System.out.println("Train ID Valid: " + trainIdValid);
-        System.out.println("Cargo Code Valid: " + cargoCodeValid);
-
-        System.out.println("\nUC11 validation completed ...");
+        System.out.println("\n\nUC16 sorting completed ...");
     }
 }
